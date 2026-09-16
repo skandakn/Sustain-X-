@@ -1,5 +1,5 @@
 {
-  "name": "adaptiva",
+  "name": "sustain-x",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.8.0",
+    "@google/genai": "^2.22.0",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.3",
     "clsx": "^2.1.1",

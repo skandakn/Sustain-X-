@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 
-export const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
+export const DEFAULT_GEMINI_MODEL = "gemini-3.6-flash";
 
 type GeminiPart =
   | { text: string }
@@ -19,7 +19,9 @@ type GenerateGeminiTextOptions = {
 let client: GoogleGenAI | null = null;
 
 export function getGeminiApiKey() {
-  return process.env.GEMINI_API_KEY?.trim() ?? "";
+  const raw = process.env.GEMINI_API_KEY?.trim().replace(/^["']|["']$/g, "") ?? "";
+  // Strip trailing dot if accidentally copied with punctuation
+  return raw.endsWith(".") ? raw.slice(0, -1) : raw;
 }
 
 function getGeminiClient() {
@@ -48,21 +50,30 @@ export async function generateGeminiText({
   const ai = getGeminiClient();
   if (!ai) return null;
 
-  try {
-    const response = await ai.models.generateContent({
-      model,
-      contents,
-      config: {
-        systemInstruction,
-        temperature,
-        responseMimeType
-      }
-    });
+  const candidateModels = Array.from(
+    new Set([model, "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite"])
+  );
 
-    return response.text?.trim() || null;
-  } catch {
-    return null;
+  for (const currentModel of candidateModels) {
+    try {
+      const response = await ai.models.generateContent({
+        model: currentModel,
+        contents,
+        config: {
+          systemInstruction,
+          temperature,
+          responseMimeType
+        }
+      });
+
+      const text = response.text?.trim() || null;
+      if (text) return text;
+    } catch (error) {
+      console.error(`[Gemini] Error with model ${currentModel}:`, error);
+    }
   }
+
+  return null;
 }
 
 export async function generateGeminiImageText(

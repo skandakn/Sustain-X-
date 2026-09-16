@@ -62,6 +62,8 @@ export function ReadingModeControls({
         >
           <span
             aria-hidden="true"
+            data-no-translate
+            translate="no"
             className={cn(
               "grid size-7 place-items-center rounded-full border text-xs font-black",
               preferences.enabled ? "border-moss bg-moss text-white" : "border-ink/20 bg-white text-graphite"
@@ -69,7 +71,9 @@ export function ReadingModeControls({
           >
             {preferences.enabled ? "ON" : "OFF"}
           </span>
-          <span className="text-sm font-black">Reading Mode {preferences.enabled ? "ON" : "OFF"}</span>
+          <span data-no-translate translate="no" className="text-sm font-black">
+            Reading Mode {preferences.enabled ? "ON" : "OFF"}
+          </span>
         </button>
       </div>
 

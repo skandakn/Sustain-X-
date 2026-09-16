@@ -15,6 +15,7 @@ import {
   defaultLanguage,
   getLanguageMeta,
   isContentLanguage,
+  languageOptions,
   languageStorageKey
 } from "@/lib/i18n/languages";
 import type { ContentLanguage } from "@/lib/types";
@@ -77,11 +78,35 @@ function shouldSkipAttributeElement(element: Element | null) {
   return Boolean(element?.closest(ATTRIBUTE_SKIP_SELECTOR));
 }
 
+function isKnownTranslationOf(current: string, original: string, cache: Map<string, string>) {
+  const currentKey = normalizedKey(current);
+  const originalKey = normalizedKey(original);
+  if (!currentKey || currentKey === originalKey) return true;
+
+  for (const [cacheKey, value] of cache) {
+    const separator = cacheKey.indexOf("::");
+    if (separator === -1) continue;
+    if (cacheKey.slice(separator + 2) === originalKey && normalizedKey(value) === currentKey) {
+      return true;
+    }
+  }
+
+  return languageOptions.some(
+    (language) =>
+      language.value !== "English" &&
+      normalizedKey(fallbackTranslateText(language.value, originalKey)) === currentKey
+  );
+}
+
 function originalAttrName(attr: AttributeItem["attr"]) {
   return `data-i18n-original-${attr}`;
 }
 
-function collectTextItems(root: ParentNode, originals: WeakMap<Text, string>) {
+function collectTextItems(
+  root: ParentNode,
+  originals: WeakMap<Text, string>,
+  cache: Map<string, string>
+) {
   const items: TextItem[] = [];
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
 
@@ -89,9 +114,13 @@ function collectTextItems(root: ParentNode, originals: WeakMap<Text, string>) {
   while (current) {
     const node = current as Text;
     const parent = node.parentElement;
-    if (parent && !shouldSkipElement(parent) && shouldTranslate(node.nodeValue ?? "")) {
-      if (!originals.has(node)) originals.set(node, node.nodeValue ?? "");
-      const original = originals.get(node) ?? "";
+    const value = node.nodeValue ?? "";
+    if (parent && !shouldSkipElement(parent) && shouldTranslate(value)) {
+      const stored = originals.get(node);
+      if (stored === undefined || !isKnownTranslationOf(value, stored, cache)) {
+        originals.set(node, value);
+      }
+      const original = originals.get(node) ?? value;
       const key = normalizedKey(original);
       if (shouldTranslate(key)) items.push({ node, original, key });
     }
@@ -101,7 +130,7 @@ function collectTextItems(root: ParentNode, originals: WeakMap<Text, string>) {
   return items;
 }
 
-function collectAttributeItems(root: ParentNode) {
+function collectAttributeItems(root: ParentNode, cache: Map<string, string>) {
   const selector = TRANSLATABLE_ATTRS.map((attr) => `[${attr}]`).join(",");
   const elements = Array.from(root.querySelectorAll(selector));
   const items: AttributeItem[] = [];
@@ -113,7 +142,8 @@ function collectAttributeItems(root: ParentNode) {
       if (!value || !shouldTranslate(value)) continue;
 
       const originalName = originalAttrName(attr);
-      if (!element.hasAttribute(originalName)) {
+      const stored = element.getAttribute(originalName);
+      if (!stored || !isKnownTranslationOf(value, stored, cache)) {
         element.setAttribute(originalName, value);
       }
 
@@ -192,8 +222,8 @@ export function AppLanguageProvider({ children }: { children: React.ReactNode })
     if (typeof document === "undefined") return;
     const root = document.body;
     const targetLanguage = languageRef.current;
-    const textItems = collectTextItems(root, textOriginals.current);
-    const attrItems = collectAttributeItems(root);
+    const textItems = collectTextItems(root, textOriginals.current, cache.current);
+    const attrItems = collectAttributeItems(root, cache.current);
 
     if (targetLanguage === "English") {
       applyItems(targetLanguage, textItems, attrItems);

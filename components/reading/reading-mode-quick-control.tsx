@@ -59,7 +59,15 @@ export function ReadingModeQuickControl({ className }: { className?: string }) {
       >
         <BookOpenText aria-hidden="true" size={18} />
         <span className="hidden sm:inline">Reading</span>
-        <span className="rounded-full bg-paper px-2 py-1 text-[0.68rem] uppercase tracking-[0.08em]">
+        <span
+          key={preferences.enabled ? "on" : "off"}
+          data-no-translate
+          translate="no"
+          className={cn(
+            "rounded-full px-2 py-1 text-[0.68rem] uppercase tracking-[0.08em]",
+            preferences.enabled ? "bg-moss text-white" : "bg-paper text-graphite"
+          )}
+        >
           {preferences.enabled ? "ON" : "OFF"}
         </span>
       </button>

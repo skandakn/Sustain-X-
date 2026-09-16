@@ -26,6 +26,8 @@ export function ReadingModeShowcase() {
           </p>
         </div>
         <span
+          data-no-translate
+          translate="no"
           className={cn(
             "rounded-card border px-3 py-2 text-xs font-black uppercase tracking-[0.12em]",
             preferences.enabled ? "border-moss bg-mint/14 text-moss" : "border-ink/10 bg-paper text-graphite"
@@ -47,7 +49,11 @@ export function ReadingModeShowcase() {
         onClick={() => setEnabled(!preferences.enabled)}
       >
         <span className="font-black">Reading Mode</span>
-        <span className="rounded-full bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.1em] text-moss">
+        <span
+          data-no-translate
+          translate="no"
+          className="rounded-full bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.1em] text-moss"
+        >
           {preferences.enabled ? "ON" : "OFF"}
         </span>
       </button>

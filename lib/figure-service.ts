@@ -1,14 +1,15 @@
-﻿/**
+/**
  * lib/figure-service.ts
  *
- * Text-to-Figure AI service.  Follows the same pattern as lib/ai-service.ts:
- *  - When OPENAI_API_KEY is set, call the OpenAI Responses API.
+ * Text-to-Figure AI service. Follows the same Gemini-backed pattern as the
+ * other AI features in this application.
  *  - Otherwise fall through to deterministic demo / keyword-based fallback.
  *
  * Public entry-point: generateFigureSpecification()
  */
 
 import { demoFigures } from "@/lib/demo-data";
+import { generateGeminiText } from "@/lib/gemini";
 import type { FigureComplexity, FigureNode, FigureRelationship, FigureSpec, FigureType } from "@/lib/types";
 
 // ─── Internal helpers ────────────────────────────────────────────────────────
@@ -19,41 +20,13 @@ function uid() {
   return Math.random().toString(36).slice(2, 10);
 }
 
-async function callOpenAI(systemPrompt: string, userPrompt: string): Promise<string | null> {
-  const apiKey = process.env.OPENAI_API_KEY || process.env.GROQ_API_KEY;
-  if (!apiKey) return null;
-  const isGroq = !process.env.OPENAI_API_KEY && Boolean(process.env.GROQ_API_KEY);
-  const endpoint = isGroq
-    ? "https://api.groq.com/openai/v1/chat/completions"
-    : "https://api.openai.com/v1/chat/completions";
-  const model = isGroq
-    ? (process.env.AI_MODEL || "llama-3.3-70b-versatile")
-    : (process.env.AI_MODEL && !process.env.AI_MODEL.includes("gpt-4.1") ? process.env.AI_MODEL : "gpt-4o-mini");
-
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt }
-        ],
-        temperature: 0.2
-      })
-    });
-
-    if (!response.ok) return null;
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    return typeof content === "string" ? content.trim() : null;
-  } catch {
-    return null;
-  }
+async function callGemini(systemPrompt: string, userPrompt: string): Promise<string | null> {
+  return generateGeminiText({
+    systemInstruction: systemPrompt,
+    contents: userPrompt,
+    temperature: 0.2,
+    responseMimeType: "application/json"
+  });
 }
 
 // ─── Keyword-based demo matching ─────────────────────────────────────────────
@@ -174,7 +147,7 @@ function autoSelectComplexity(content: string, figureType: FigureType): FigureCo
   return "simple";
 }
 
-// ─── OpenAI-powered figure generation ────────────────────────────────────────
+// ─── Gemini-powered figure generation ───────────────────────────────────────
 
 async function generateWithAI(
   content: string,
@@ -183,7 +156,7 @@ async function generateWithAI(
 ): Promise<FigureSpec | null> {
   const maxNodes = complexity === "simple" ? 6 : 12;
 
-  const systemPrompt = `You are an educational figure generator for the ADAPTIVA accessibility platform.
+  const systemPrompt = `You are an educational figure generator for the Sustain-X accessibility platform.
 Your task is to convert educational text into a structured JSON figure specification.
 Respond with ONLY valid JSON — no markdown fences, no commentary.
 
@@ -213,7 +186,7 @@ Rules:
 
   const userPrompt = `Figure type: ${figureType}\nComplexity: ${complexity} (max ${maxNodes} nodes)\n\nSource text:\n${content}`;
 
-  const raw = await callOpenAI(systemPrompt, userPrompt);
+  const raw = await callGemini(systemPrompt, userPrompt);
   if (!raw) return null;
 
   try {
@@ -261,7 +234,7 @@ export async function generateFigureSpecification(
     figureType === "auto" ? autoSelectFigureType(content) : figureType;
   const resolvedComplexity = complexity ?? autoSelectComplexity(content, resolvedType);
 
-  // 1. Try OpenAI if available
+  // 1. Try Gemini if available
   const aiResult = await generateWithAI(content, resolvedType, resolvedComplexity);
   if (aiResult) return aiResult;
 

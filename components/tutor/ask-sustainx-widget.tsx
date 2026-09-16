@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, useRef, useState } from "react";
 import { MessageCircle, RefreshCcw, Send, Sparkles, X } from "lucide-react";
@@ -110,8 +110,7 @@ export function AskSustainXWidget() {
 
           <div className="flex-1 overflow-y-auto bg-paper p-4">
             <div className="rounded-card border border-mint/20 bg-white p-3 text-sm leading-6 text-graphite shadow-sm">
-              Hi, I'm Ask ADAPTIVA. Ask me a learning question, or use a quick action to shape
-              the explanation.
+              Hi, I&apos;m Ask ADAPTIVA. Ask me a learning question, or use a quick action to shape              the explanation.
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">

@@ -1,4 +1,4 @@
-import { featuredLesson, mindMapsByLanguage } from "@/lib/demo-data";
+﻿import { featuredLesson, mindMapsByLanguage } from "@/lib/demo-data";
 import type { AccessibilitySupport, ContentLanguage, MindMapNode } from "@/lib/types";
 
 type Level = "simple" | "very-simple" | "new";
@@ -138,8 +138,8 @@ function getLatestUserMessage(messages: SustainXChatMessage[]) {
 function getChatFallback(messages: SustainXChatMessage[]) {
   const question = getLatestUserMessage(messages);
   return question
-    ? "Ask Sustain-X needs the server-side AI connection to answer this directly. Please check your API key in .env.local."
-    : "Ask Sustain-X needs a question to answer.";
+    ? "Ask ADAPTIVA needs the server-side AI connection to answer this directly. Please check your API key in .env.local."
+    : "Ask ADAPTIVA needs a question to answer.";
 }
 
 export async function generateNotesFromTranscript(transcript: string) {
@@ -201,7 +201,7 @@ export async function askSustainXChat(messages: SustainXChatMessage[], _context?
           {
             role: "system",
             content:
-              "You are Ask Sustain-X, a general educational assistant for learners across subjects. When the learner asks a direct educational question, answer the question directly first. For example, if they ask what a concept is, explain that concept; if they ask for a simple explanation, explain it simply; if they ask for an example, include an example. Do not give meta-advice about how to study unless requested. Explain clearly, accurately, and accessibly."
+              "You are Ask ADAPTIVA, a general educational assistant for learners across subjects. When the learner asks a direct educational question, answer the question directly first. For example, if they ask what a concept is, explain that concept; if they ask for a simple explanation, explain it simply; if they ask for an example, include an example. Do not give meta-advice about how to study unless requested. Explain clearly, accurately, and accessibly."
           },
           ...messages
         ]
@@ -288,7 +288,7 @@ export async function analyzeUploadedImage(
           {
             role: "system",
             content:
-              "You are Sustain-X, an accessibility-first educational AI that analyzes uploaded documents, study notes, images, and textbook scans. Help students with learning differences understand the material clearly.\n\nStructure your output with clear markdown headings:\n### 📄 Extracted Content\n(Transcribe or summarize all readable text, labels, equations, and diagrams found in the image)\n\n### 💡 " + action + "\n(Provide the tailored explanation based on the requested format)"
+              "You are ADAPTIVA, an accessibility-first educational AI that analyzes uploaded documents, study notes, images, and textbook scans. Help students with learning differences understand the material clearly.\n\nStructure your output with clear markdown headings:\n### 📄 Extracted Content\n(Transcribe or summarize all readable text, labels, equations, and diagrams found in the image)\n\n### 💡 " + action + "\n(Provide the tailored explanation based on the requested format)"
           },
           {
             role: "user",
@@ -511,7 +511,7 @@ export async function extractConcepts(input = featuredLesson.original) {
 
 export async function askTutor(input: string, question?: string) {
   return callAI(
-    "Answer as Sustain-X, an accessibility-first learning assistant. Use respectful, simple, context-aware explanations.",
+    "Answer as ADAPTIVA, an accessibility-first learning assistant. Use respectful, simple, context-aware explanations.",
     `Content:\n${input}\n\nQuestion:\n${question ?? "Explain this differently."}`,
     "Think of DNA as a recipe book. Before a cell divides, it needs a second copy. DNA opens, each half guides a matching new half, and the cell ends with two complete copies."
   );

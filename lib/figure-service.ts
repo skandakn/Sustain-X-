@@ -1,4 +1,4 @@
-/**
+﻿/**
  * lib/figure-service.ts
  *
  * Text-to-Figure AI service.  Follows the same pattern as lib/ai-service.ts:
@@ -183,7 +183,7 @@ async function generateWithAI(
 ): Promise<FigureSpec | null> {
   const maxNodes = complexity === "simple" ? 6 : 12;
 
-  const systemPrompt = `You are an educational figure generator for the Sustain-X accessibility platform.
+  const systemPrompt = `You are an educational figure generator for the ADAPTIVA accessibility platform.
 Your task is to convert educational text into a structured JSON figure specification.
 Respond with ONLY valid JSON — no markdown fences, no commentary.
 

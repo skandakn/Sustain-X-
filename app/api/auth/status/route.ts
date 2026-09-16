@@ -1,4 +1,4 @@
-import { auth as clerkAuth, currentUser } from "@clerk/nextjs/server";
+﻿import { auth as clerkAuth, currentUser } from "@clerk/nextjs/server";
 import { ok } from "@/lib/api/http";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { persistenceMode } from "@/lib/supabase/config";
@@ -26,7 +26,7 @@ export async function GET() {
     return ok({
       mode,
       authenticated: true,
-      user: { email: "demo@sustain-x.local" }
+      user: { email: "demo@ADAPTIVA.local" }
     });
   }
 

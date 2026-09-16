@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   AlertCircle,
@@ -168,7 +168,7 @@ export function FigureWorkspace({ initialContent }: { initialContent?: string })
           </h1>
           <ReadingContent
             className="mt-4 max-w-2xl text-lg leading-8 text-graphite"
-            text="Sustain-X transforms educational text into clear, contextual visual explanations. Figures are an additional way to understand concepts; choose whatever works best for you."
+            text="ADAPTIVA transforms educational text into clear, contextual visual explanations. Figures are an additional way to understand concepts; choose whatever works best for you."
           />
         </div>
         <Panel className="w-full max-w-xs p-4" as="div">
@@ -203,7 +203,7 @@ export function FigureWorkspace({ initialContent }: { initialContent?: string })
         <textarea
           id="ttf-input"
           className="mt-4 min-h-36 w-full resize-y rounded-card border border-ink/12 bg-paper px-4 py-3 text-base leading-8 text-ink placeholder:text-graphite/60 focus-visible:border-moss focus-visible:outline-none focus-visible:ring-0"
-          placeholder="Paste your lesson, paragraph, or topic. Sustain-X will choose the best figure format."
+          placeholder="Paste your lesson, paragraph, or topic. ADAPTIVA will choose the best figure format."
           value={content}
           onChange={(e) => setContent(e.target.value)}
           aria-label="Educational content to convert into a figure"

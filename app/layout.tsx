@@ -6,7 +6,7 @@ import { SiteShell } from "@/components/layout/site-shell";
 import { ReadingModeProvider } from "@/components/reading/reading-mode-provider";
 
 export const metadata: Metadata = {
-  title: "Sustain-X - Adaptive accessibility for learning",
+  title: "ADAPTIVA - Adaptive accessibility for learning",
   description:
     "An AI-powered accessibility layer that transforms educational content around each learner's needs."
 };

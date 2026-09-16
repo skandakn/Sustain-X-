@@ -1,4 +1,4 @@
-import { BookOpen, FileAudio, FileUp, PenLine, Send, Users } from "lucide-react";
+﻿import { BookOpen, FileAudio, FileUp, PenLine, Send, Users } from "lucide-react";
 import Link from "next/link";
 import { TeacherInsightChart } from "@/components/charts/learning-charts";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ export default function TeacherPage() {
       <p className="text-sm font-black uppercase tracking-[0.16em] text-moss">Teacher Dashboard</p>
       <h1 className="mt-4 text-5xl font-black text-ink">Create accessible material once.</h1>
       <p className="mt-3 max-w-3xl text-xl leading-8 text-graphite">
-        Sustain-X prepares simplified notes, audio, concept maps, quizzes, and difficult-concept insights.
+        ADAPTIVA prepares simplified notes, audio, concept maps, quizzes, and difficult-concept insights.
       </p>
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
         {tools.map((tool) => {

@@ -67,11 +67,11 @@ export function SustainXPipeline() {
   return (
     <section
       className="bg-paper py-14"
-      aria-label="Sustain-X accessibility pipeline"
+      aria-label="ADAPTIVA accessibility pipeline"
     >
       {/* Accessible description for screen readers */}
       <p className="sr-only">
-        Sustain-X transforms documents, lectures, videos and text using AI into
+        ADAPTIVA transforms documents, lectures, videos and text using AI into
         personalized learning formats including simplified reading,
         step-by-step explanations, visual figures and audio.
       </p>
@@ -80,7 +80,7 @@ export function SustainXPipeline() {
         {/* Section label */}
         <div className="mb-8 text-center">
           <span className="inline-flex items-center rounded-card border border-ink/10 bg-cloud px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-moss">
-            How Sustain-X Works
+            How ADAPTIVA Works
           </span>
           <h2 className="mt-4 text-2xl font-black text-ink sm:text-3xl">
             Any content. Every learner.
@@ -130,7 +130,7 @@ export function SustainXPipeline() {
               }`}
             >
               <p className="text-xs font-black uppercase tracking-[0.14em] text-mint">
-                ✨ SUSTAIN-X AI
+                ✨ ADAPTIVA AI
               </p>
               <div className="mt-3 flex flex-col gap-0.5">
                 {["UNDERSTAND", "SIMPLIFY", "ADAPT"].map((stage, i, arr) => (
@@ -240,7 +240,7 @@ export function SustainXPipeline() {
           {/* AI box */}
           <div className="rounded-card border-2 border-moss bg-ink px-8 py-5 text-center shadow-lift">
             <p className="text-sm font-black uppercase tracking-[0.14em] text-mint">
-              ✨ SUSTAIN-X AI
+              ✨ ADAPTIVA AI
             </p>
             <p className="mt-1 text-xs text-white/60">
               UNDERSTAND · SIMPLIFY · ADAPT

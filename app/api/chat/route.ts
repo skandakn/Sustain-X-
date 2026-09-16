@@ -1,4 +1,4 @@
-import { askSustainXChat } from "@/lib/ai-service";
+﻿import { askSustainXChat } from "@/lib/ai-service";
 import { fail, handleApiError, ok } from "@/lib/api/http";
 import { chatPayloadSchema } from "@/lib/api/validation";
 
@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     const content = await askSustainXChat(payload.messages, payload.context);
 
     if (!content) {
-      return fail("Ask Sustain-X is not available.", 503, "ai_chat_unavailable");
+      return fail("Ask ADAPTIVA is not available.", 503, "ai_chat_unavailable");
     }
 
     return ok({

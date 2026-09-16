@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { X, Volume2 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -222,7 +222,7 @@ function getWordSupport(word: string): DifficultWord {
     difficultWords[normalized] ?? {
       word,
       syllables: word.length > 7 ? word.replace(/([aeiouy])/gi, "$1-").replace(/-$/, "") : word,
-      meaning: "Sustain-X can connect this word to an AI explanation later. Demo biology terms include definitions now."
+      meaning: "ADAPTIVA can connect this word to an AI explanation later. Demo biology terms include definitions now."
     }
   );
 }

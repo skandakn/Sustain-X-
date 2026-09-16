@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { BookOpenText, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +7,7 @@ import { ReadingModeControls } from "./reading-mode-controls";
 import { useReadingMode } from "./reading-mode-provider";
 
 const sampleReadText =
-  "Sustain-X keeps Reading Mode available everywhere. Learning content uses the selected reading format, while navigation and controls stay stable.";
+  "ADAPTIVA keeps Reading Mode available everywhere. Learning content uses the selected reading format, while navigation and controls stay stable.";
 
 export function ReadingModeQuickControl({ className }: { className?: string }) {
   const { preferences } = useReadingMode();

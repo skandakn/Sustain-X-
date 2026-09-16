@@ -1,4 +1,4 @@
-import {
+﻿import {
   askTutor,
   explainStepByStep,
   extractConcepts,
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       if (usesDemoStore(auth.mode)) {
         demoStore.createNote({
           material_id: payload.material_id ?? null,
-          title: `Sustain-X ${payload.action}`,
+          title: `ADAPTIVA ${payload.action}`,
           content,
           note_type: payload.action
         });
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         await auth.supabase!.from("saved_notes").insert({
           user_id: auth.userId,
           material_id: payload.material_id ?? null,
-          title: `Sustain-X ${payload.action}`,
+          title: `ADAPTIVA ${payload.action}`,
           content,
           note_type: payload.action
         });

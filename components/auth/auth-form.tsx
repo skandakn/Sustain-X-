@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { SignIn, SignUp } from "@clerk/nextjs";
 import { CheckCircle2, LogIn, ShieldCheck, UserPlus } from "lucide-react";
@@ -52,10 +52,10 @@ export function AuthForm({
           {isSignIn ? "Welcome back" : "Create account"}
         </p>
         <h1 className="mt-4 text-balance text-5xl font-black leading-tight text-ink">
-          {isSignIn ? "Sign in to your adaptive workspace." : "Save your Sustain-X profile securely."}
+          {isSignIn ? "Sign in to your adaptive workspace." : "Save your ADAPTIVA profile securely."}
         </h1>
         <p className="mt-4 max-w-xl text-lg leading-8 text-graphite">
-          Clerk authentication protects the private learning workspace while Sustain-X keeps the same accessible, personalized interface.
+          Clerk authentication protects the private learning workspace while ADAPTIVA keeps the same accessible, personalized interface.
         </p>
         <div className="mt-6 grid gap-3">
           {benefits.map((benefit) => (

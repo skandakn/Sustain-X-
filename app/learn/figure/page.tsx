@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { FigureWorkspace } from "@/components/learning/figure/figure-workspace";
 
 export const metadata: Metadata = {
-  title: "Text-to-Figure | Sustain-X",
+  title: "Text-to-Figure | ADAPTIVA",
   description:
-    "Sustain-X Text-to-Figure (TTF) converts educational text into clear, contextual visual explanations. Turn complex information into something you can see."
+    "ADAPTIVA Text-to-Figure (TTF) converts educational text into clear, contextual visual explanations. Turn complex information into something you can see."
 };
 
 export default function FigurePage() {

@@ -51,7 +51,7 @@ export function AskSustainXWidget() {
 
       setMessages([...nextMessages, data.reply]);
     } catch {
-      setError("Ask Sustain-X had trouble answering. Please try again.");
+      setError("Ask ADAPTIVA had trouble answering. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -94,14 +94,14 @@ export function AskSustainXWidget() {
             <div>
               <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-moss">
                 <Sparkles aria-hidden="true" size={15} />
-                Ask Sustain-X
+                Ask ADAPTIVA
               </p>
-              <h2 className="mt-1 text-xl font-black text-ink">Ask Sustain-X</h2>
+              <h2 className="mt-1 text-xl font-black text-ink">Ask ADAPTIVA</h2>
             </div>
             <button
               type="button"
               className="grid size-10 place-items-center rounded-card text-graphite transition hover:bg-cloud hover:text-ink"
-              aria-label="Close Ask Sustain-X"
+              aria-label="Close Ask ADAPTIVA"
               onClick={() => setOpen(false)}
             >
               <X aria-hidden="true" size={20} />
@@ -110,7 +110,7 @@ export function AskSustainXWidget() {
 
           <div className="flex-1 overflow-y-auto bg-paper p-4">
             <div className="rounded-card border border-mint/20 bg-white p-3 text-sm leading-6 text-graphite shadow-sm">
-              Hi, I’m Ask Sustain-X. Ask me a learning question, or use a quick action to shape
+              Hi, I'm Ask ADAPTIVA. Ask me a learning question, or use a quick action to shape
               the explanation.
             </div>
 
@@ -143,7 +143,7 @@ export function AskSustainXWidget() {
                     {message.role === "assistant" ? (
                       <span className="mb-1 flex items-center gap-2 font-black text-ink">
                         <Sparkles aria-hidden="true" size={14} />
-                        Sustain-X
+                        ADAPTIVA
                       </span>
                     ) : null}
                     {message.content}
@@ -181,7 +181,7 @@ export function AskSustainXWidget() {
           <form className="border-t border-ink/10 bg-white p-4" onSubmit={onSubmit}>
             <div className="flex items-center justify-between gap-3">
               <label className="sr-only" htmlFor="ask-sustainx-input">
-                Ask Sustain-X
+                Ask ADAPTIVA
               </label>
               <button
                 type="button"
@@ -219,7 +219,7 @@ export function AskSustainXWidget() {
           }}
         >
           <MessageCircle aria-hidden="true" size={18} />
-          Ask Sustain-X
+          Ask ADAPTIVA
         </Button>
       )}
     </div>

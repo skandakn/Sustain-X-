@@ -1,4 +1,4 @@
-import { fallbackTranslateBatch } from "@/lib/i18n/fallback-translations";
+﻿import { fallbackTranslateBatch } from "@/lib/i18n/fallback-translations";
 import type { ContentLanguage } from "@/lib/types";
 
 type TranslationProvider = "openai" | "demo";
@@ -44,7 +44,7 @@ async function translateWithOpenAI(language: ContentLanguage, texts: string[]) {
           {
             role: "system",
             content:
-              "Translate Sustain-X UI text for an educational accessibility web app. Preserve product names, acronyms, numbers, URLs, and code-like tokens. Return only JSON with this exact shape: {\"translations\":[{\"source\":\"original\",\"target\":\"translation\"}]}. Do not add commentary."
+              "Translate ADAPTIVA UI text for an educational accessibility web app. Preserve product names, acronyms, numbers, URLs, and code-like tokens. Return only JSON with this exact shape: {\"translations\":[{\"source\":\"original\",\"target\":\"translation\"}]}. Do not add commentary."
           },
           {
             role: "user",

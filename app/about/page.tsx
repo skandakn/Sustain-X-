@@ -17,7 +17,7 @@ export default function AboutPage() {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <SectionHeader
         eyebrow="Impact"
-        title="Digital accessibility is often treated as a feature. Sustain-X makes it the foundation."
+        title="Digital accessibility is often treated as a feature. ADAPTIVA makes it the foundation."
         body="Students should not have to adapt to technology. Technology should adapt to the student."
       />
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
@@ -28,9 +28,9 @@ export default function AboutPage() {
           </p>
         </Panel>
         <Panel>
-          <h2 className="text-3xl font-black text-ink">Sustain-X&apos;s approach</h2>
+          <h2 className="text-3xl font-black text-ink">ADAPTIVA&apos;s approach</h2>
           <p className="mt-4 text-lg leading-9 text-graphite">
-            Sustain-X transforms the content layer itself: easier to read, understand, hear, focus on, navigate, translate, and remember.
+            ADAPTIVA transforms the content layer itself: easier to read, understand, hear, focus on, navigate, translate, and remember.
           </p>
         </Panel>
       </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
@@ -13,7 +13,7 @@ import {
 } from "@/lib/reading-mode";
 import type { ReadingFont, ReadingPreferences, ReadingSpacing, ReadingSpeed } from "@/lib/reading-mode";
 
-const storageKey = "sustain-x.reading-mode.v1";
+const storageKey = "ADAPTIVA.reading-mode.v1";
 
 type SpeechState = {
   text: string | null;

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Send, Sparkles } from "lucide-react";
 import { FormEvent, useState } from "react";
@@ -56,7 +56,7 @@ export function AIChat() {
     <Panel className="mx-auto max-w-5xl">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.14em] text-moss">Ask Sustain-X</p>
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-moss">Ask ADAPTIVA</p>
           <h1 className="mt-2 text-4xl font-black text-ink">Context-aware AI tutor</h1>
         </div>
         <span className="rounded-card bg-mint/14 px-3 py-2 text-sm font-black text-moss">
@@ -90,7 +90,7 @@ export function AIChat() {
               {message.role === "assistant" ? (
                 <span className="mb-2 flex items-center gap-2 font-black text-ink">
                   <Sparkles aria-hidden="true" size={16} />
-                  Sustain-X
+                  ADAPTIVA
                 </span>
               ) : null}
               <ReadingContent text={message.content} />
@@ -100,7 +100,7 @@ export function AIChat() {
       </div>
       <form className="mt-4 flex flex-col gap-3 sm:flex-row" onSubmit={onSubmit}>
         <label className="sr-only" htmlFor="tutor-input">
-          Ask Sustain-X
+          Ask ADAPTIVA
         </label>
         <input
           id="tutor-input"

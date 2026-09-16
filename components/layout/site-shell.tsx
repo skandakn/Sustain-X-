@@ -64,7 +64,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                 </Link>
               </Button>
               <Button asChild>
-                <Link href="/onboarding">Try Sustain-X</Link>
+                <Link href="/onboarding">Try ADAPTIVA</Link>
               </Button>
             </Show>
             <Show when="signed-in">
@@ -115,7 +115,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               ))}
               <Button className="mt-2" asChild>
                 <Link href="/onboarding" onClick={() => setOpen(false)}>
-                  Try Sustain-X
+                  Try ADAPTIVA
                 </Link>
               </Button>
               <Show when="signed-out">

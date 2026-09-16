@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   BookOpen,
@@ -673,7 +673,7 @@ export function LearningWorkspace() {
           onComplete={() => {
             setMode("Simple Explanation");
             setLearningContent((current) => ({ ...current, "Simple Explanation": featuredLesson.simplified }));
-            setStatus("Sustain-X created a simplified, chunked, audio-ready learning mode.");
+            setStatus("ADAPTIVA created a simplified, chunked, audio-ready learning mode.");
           }}
         />
       </div>
@@ -697,7 +697,7 @@ export function LearningWorkspace() {
         ))}
       </div>
 
-      {/* Main Dual Panels: Original Content vs Adapted by Sustain-X */}
+      {/* Main Dual Panels: Original Content vs Adapted by ADAPTIVA */}
       <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <Panel>
           <div className="flex items-center justify-between gap-4">
@@ -715,7 +715,7 @@ export function LearningWorkspace() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-moss">
-                Adapted by Sustain-X
+                Adapted by ADAPTIVA
               </p>
               <h2 className="mt-2 text-2xl font-black text-ink">{mode}</h2>
             </div>
@@ -788,7 +788,7 @@ export function LearningWorkspace() {
               OCR & Visual Learning
             </h2>
             <p className="mt-2 text-base text-graphite">
-              Upload textbook pages, diagrams, or handwritten notes. Sustain-X transcribes the content and creates accessible learning modes.
+              Upload textbook pages, diagrams, or handwritten notes. ADAPTIVA transcribes the content and creates accessible learning modes.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -898,12 +898,12 @@ export function LearningWorkspace() {
             )}
           </Panel>
 
-          {/* Right Panel: ADAPTED BY SUSTAIN-X */}
+          {/* Right Panel: ADAPTED BY ADAPTIVA */}
           <Panel>
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-moss">
-                  Adapted by Sustain-X
+                  Adapted by ADAPTIVA
                 </p>
                 <h3 className="mt-2 text-2xl font-black text-ink">{activeImageMode} Mode</h3>
               </div>

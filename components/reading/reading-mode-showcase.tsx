@@ -62,7 +62,7 @@ export function ReadingModeShowcase() {
         </div>
         <div className="rounded-card border border-moss/25 bg-mint/10 p-4">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss">Sustain-X Reading Mode</p>
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-moss">ADAPTIVA Reading Mode</p>
             <Leaf aria-hidden="true" className="text-moss" size={19} />
           </div>
           <ReadingContent className="mt-3 text-base leading-7 text-ink" text={adaptedText} />

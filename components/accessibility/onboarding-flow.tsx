@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { CheckCircle2, Sparkles } from "lucide-react";
 import { useState } from "react";
@@ -73,7 +73,7 @@ export function OnboardingFlow() {
           What support would make learning easier for you?
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-8 text-graphite">
-          Sustain-X recommends a learning profile from preferences. It is not a medical diagnosis.
+          ADAPTIVA recommends a learning profile from preferences. It is not a medical diagnosis.
         </p>
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           {supportOptions.map((option) => {
@@ -119,7 +119,7 @@ export function OnboardingFlow() {
           <div className="grid gap-4">
             <Panel>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-moss">
-                Your Sustain-X profile is ready
+                Your ADAPTIVA profile is ready
               </p>
               <h2 className="mt-3 text-2xl font-black text-ink">Same knowledge. Built for you.</h2>
               <p className="mt-3 text-sm leading-7 text-graphite">

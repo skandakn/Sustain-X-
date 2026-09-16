@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Languages, Mic, MicOff, Save, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -330,14 +330,14 @@ function AdaptiveExplanation({
       </p>
       <ReadingContent
         className="mt-3 text-sm leading-7 text-graphite"
-        text="DNA replication contains several technical terms. Sustain-X recommends changing the explanation style."
+        text="DNA replication contains several technical terms. ADAPTIVA recommends changing the explanation style."
       />
 
       <div className="mt-4 rounded-card border border-ink/10 bg-white p-4">
-        <h4 className="font-black text-ink">🧠 Why did Sustain-X adapt this?</h4>
+        <h4 className="font-black text-ink">🧠 Why did ADAPTIVA adapt this?</h4>
         <ReadingContent
           className="mt-2 text-sm leading-7 text-graphite"
-          text="This topic contains unfamiliar scientific terms, so Sustain-X is offering simpler ways to understand it."
+          text="This topic contains unfamiliar scientific terms, so ADAPTIVA is offering simpler ways to understand it."
         />
       </div>
 

@@ -58,7 +58,7 @@ export function ProductShowcase() {
             <ArrowRight aria-hidden="true" className="text-moss" size={18} />
           </div>
           <div className="rounded-card border border-moss/30 bg-mint/10 px-3 py-3 text-center">
-            <p className="text-sm font-black text-moss">✨ SUSTAIN-X AI</p>
+            <p className="text-sm font-black text-moss">✨ ADAPTIVA AI</p>
             <div className="mt-2 flex flex-col items-center gap-1">
               {stages.map((stage, i) => (
                 <div key={stage} className="flex flex-col items-center">

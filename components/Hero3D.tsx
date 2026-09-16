@@ -1,0 +1,1 @@
+export default function Hero3D() { return ( <iframe src="https://my.spline.design/genkubgreetingrobot-fvK32LIUegsIMkd1Dke75M0Y/" style={{ width: '100%', height: '100%', border: 'none' }} title="3D scene" /> ); } 

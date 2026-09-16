@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { CSSProperties, PointerEvent, useState } from "react";
@@ -17,7 +17,7 @@ const RESTING_TILT: TiltStyle = {
   "--glow-y": "50%"
 };
 
-/** A decorative depth treatment for the existing Sustain-X hero artwork. */
+/** A decorative depth treatment for the existing ADAPTIVA hero artwork. */
 export function Hero3dIllustration() {
   const [tilt, setTilt] = useState<TiltStyle>(RESTING_TILT);
 
@@ -49,7 +49,7 @@ export function Hero3dIllustration() {
       <div className="hero-3d-card">
         <Image
           src="/hero-illustration.png"
-          alt="Sustain-X AI transforming content into personalized accessible learning formats"
+          alt="ADAPTIVA AI transforming content into personalized accessible learning formats"
           width={480}
           height={480}
           className="hero-3d-art"

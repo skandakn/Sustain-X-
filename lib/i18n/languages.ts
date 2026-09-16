@@ -1,7 +1,7 @@
-import type { ContentLanguage } from "@/lib/types";
+﻿import type { ContentLanguage } from "@/lib/types";
 
 export const defaultLanguage: ContentLanguage = "English";
-export const languageStorageKey = "sustain-x-ui-language";
+export const languageStorageKey = "ADAPTIVA-ui-language";
 
 export type LanguageMeta = {
   value: ContentLanguage;

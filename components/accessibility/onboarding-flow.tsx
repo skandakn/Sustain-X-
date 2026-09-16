@@ -1,0 +1,139 @@
+"use client";
+
+import { CheckCircle2, Sparkles } from "lucide-react";
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAppLanguage } from "@/components/i18n/language-provider";
+import { Button } from "@/components/ui/button";
+import { Panel } from "@/components/ui/panel";
+import { AccessibilityProfileCard } from "@/components/accessibility/profile-card";
+import { supportOptions } from "@/lib/demo-data";
+import type { AccessibilitySupport } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+export function OnboardingFlow() {
+  const router = useRouter();
+  const { language } = useAppLanguage();
+  const [selected, setSelected] = useState<AccessibilitySupport[]>([
+    "Dyslexia-friendly reading",
+    "Focus support",
+    "Simplified explanations",
+    "Audio learning"
+  ]);
+  const [ready, setReady] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+
+  function toggle(option: AccessibilitySupport) {
+    setSelected((current) =>
+      current.includes(option) ? current.filter((item) => item !== option) : [...current, option]
+    );
+  }
+
+  async function saveProfile() {
+    setSaving(true);
+    setMessage("");
+    try {
+      const response = await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reading_style: selected.includes("Dyslexia-friendly reading") ? "Dyslexia-friendly" : "Standard",
+          focus_mode: selected.includes("Focus support"),
+          audio_enabled: selected.includes("Audio learning"),
+          preferred_language: language,
+          preferences: {
+            dyslexia_support: selected.includes("Dyslexia-friendly reading"),
+            focus_support: selected.includes("Focus support"),
+            audio_support: selected.includes("Audio learning"),
+            visual_support: selected.includes("Visual concept maps"),
+            language_support: selected.includes("Translation support"),
+            step_by_step_support: selected.includes("Step-by-step learning")
+          }
+        })
+      });
+      const data = (await response.json()) as { error?: { message?: string } };
+      if (!response.ok) throw new Error(data.error?.message ?? "Could not save profile.");
+      setReady(true);
+      setMessage("Your profile was saved.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Could not save profile. Demo preview remains available.");
+      setReady(true);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8">
+      <section>
+        <p className="text-sm font-black uppercase tracking-[0.16em] text-moss">Personalization</p>
+        <h1 className="mt-4 text-balance text-4xl font-black leading-tight text-ink sm:text-5xl">
+          What support would make learning easier for you?
+        </h1>
+        <p className="mt-4 max-w-2xl text-lg leading-8 text-graphite">
+          Sustain-X recommends a learning profile from preferences. It is not a medical diagnosis.
+        </p>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          {supportOptions.map((option) => {
+            const active = selected.includes(option);
+            return (
+              <button
+                key={option}
+                type="button"
+                aria-pressed={active}
+                className={cn(
+                  "flex min-h-16 items-center gap-3 rounded-card border p-4 text-left transition",
+                  active
+                    ? "border-moss bg-mint/14 text-ink shadow-sm"
+                    : "border-ink/10 bg-white text-graphite hover:border-moss/35 hover:bg-cloud"
+                )}
+                onClick={() => toggle(option)}
+              >
+                <span
+                  className={cn(
+                    "grid size-7 place-items-center rounded-full border",
+                    active ? "border-moss bg-moss text-white" : "border-ink/20 bg-white"
+                  )}
+                >
+                  {active ? <CheckCircle2 aria-hidden="true" size={17} /> : null}
+                </span>
+                <span className="font-black">{option}</span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button type="button" onClick={() => void saveProfile()} disabled={saving}>
+            <Sparkles aria-hidden="true" size={18} />
+            {saving ? "Saving Profile" : "Create Adaptive Profile"}
+          </Button>
+          <Button variant="secondary" asChild>
+            <Link href="/dashboard">Use demo profile</Link>
+          </Button>
+        </div>
+      </section>
+      <aside>
+        {ready ? (
+          <div className="grid gap-4">
+            <Panel>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-moss">
+                Your Sustain-X profile is ready
+              </p>
+              <h2 className="mt-3 text-2xl font-black text-ink">Same knowledge. Built for you.</h2>
+              <p className="mt-3 text-sm leading-7 text-graphite">
+                Selected supports: {selected.join(", ")}
+              </p>
+              {message ? <p className="mt-3 text-sm font-bold text-moss">{message}</p> : null}
+            </Panel>
+            <AccessibilityProfileCard />
+            <Button type="button" onClick={() => router.push("/dashboard")}>Go to Dashboard</Button>
+          </div>
+        ) : (
+          <AccessibilityProfileCard title="Profile Preview" />
+        )}
+      </aside>
+    </div>
+  );
+}

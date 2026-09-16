@@ -1,0 +1,359 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-display: swap;
+  font-family: "OpenDyslexic";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/OpenDyslexic-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Lexend";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/Lexend-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Atkinson Hyperlegible";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/AtkinsonHyperlegible-Regular.woff2") format("woff2");
+}
+
+:root {
+  color-scheme: light;
+  --font-readable: "Atkinson Hyperlegible", "Lexend", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --focus-ring: 0 0 0 3px rgba(83, 191, 165, 0.38);
+  --reading-font-family: var(--font-readable);
+  --reading-font-size: 18px;
+  --reading-line-height: 1.95;
+  --reading-letter-spacing: 0.035em;
+  --reading-word-spacing: 0.12em;
+  --reading-paragraph-gap: 1.2rem;
+  --reading-measure: 62ch;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #f8faf7;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(83, 191, 165, 0.10), transparent 28rem),
+    linear-gradient(180deg, #f8faf7 0%, #ffffff 46%, #f2f7f4 100%);
+  color: #142322;
+  font-family: var(--font-readable);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+body.high-contrast {
+  background: #ffffff;
+  color: #0b0f0e;
+}
+
+body.reduced-motion *,
+body.reduced-motion *::before,
+body.reduced-motion *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 1ms !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+
+::selection {
+  background: rgba(83, 191, 165, 0.32);
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 80;
+  border-radius: 8px;
+  background: #142322;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  transition: top 150ms ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.readable-measure {
+  max-width: 68ch;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.reading-content {
+  overflow-wrap: anywhere;
+  transition:
+    color 180ms ease,
+    font-size 180ms ease,
+    letter-spacing 180ms ease,
+    line-height 180ms ease,
+    max-width 180ms ease,
+    word-spacing 180ms ease;
+}
+
+.reading-content .reading-paragraph + .reading-paragraph {
+  margin-top: 0.85rem;
+}
+
+.reading-mode-active .reading-content {
+  font-family: var(--reading-font-family);
+  font-size: var(--reading-font-size);
+  letter-spacing: var(--reading-letter-spacing);
+  line-height: var(--reading-line-height);
+  max-width: var(--reading-measure);
+  word-spacing: var(--reading-word-spacing);
+}
+
+.reading-mode-active .reading-content .reading-paragraph + .reading-paragraph {
+  margin-top: var(--reading-paragraph-gap);
+}
+
+.reading-sentence {
+  border-radius: 8px;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.reading-sentence-active {
+  background: rgba(242, 184, 75, 0.22);
+  box-decoration-break: clone;
+  color: #142322;
+  font-weight: 800;
+  padding: 0.08rem 0.18rem;
+  -webkit-box-decoration-break: clone;
+}
+
+.difficult-word {
+  border-radius: 6px;
+  color: inherit;
+  cursor: help;
+  font: inherit;
+  font-weight: 900;
+  padding: 0 0.08rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(47, 107, 87, 0.42);
+  text-decoration-thickness: 0.11em;
+  text-underline-offset: 0.18em;
+}
+
+.difficult-word:hover {
+  background: rgba(83, 191, 165, 0.15);
+}
+
+.reading-focus-guide-line {
+  background: linear-gradient(
+    180deg,
+    rgba(242, 184, 75, 0.02),
+    rgba(242, 184, 75, 0.16),
+    rgba(242, 184, 75, 0.02)
+  );
+  border-block: 1px solid rgba(47, 107, 87, 0.18);
+  height: clamp(2.2rem, 5vw, 3rem);
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  transform: translateY(-50%);
+  transition: top 80ms linear;
+  z-index: 45;
+}
+
+.focus-guide {
+  position: relative;
+}
+
+.focus-guide::after {
+  background: rgba(242, 184, 75, 0.2);
+  border: 1px solid rgba(242, 184, 75, 0.5);
+  border-radius: 8px;
+  content: "";
+  height: 2.35rem;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 4.2rem;
+}
+
+/* ─── Sustain-X Pipeline Animations ─────────────────────────────────────── */
+
+@keyframes pipeline-fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pipeline-pulse-scale {
+  0%, 100% {
+    box-shadow: 0 10px 24px rgba(20, 35, 34, 0.14);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 14px 36px rgba(83, 191, 165, 0.25);
+    transform: scale(1.025);
+  }
+}
+
+/*
+  Input cards appear first (staggered via --delay).
+  Output cards appear later at a 4s offset.
+  Both hold at 100% opacity; the cycleKey in React resets them by
+  unmounting/remounting the parent div with a new key.
+*/
+.pipeline-card.pipeline-input {
+  animation: pipeline-fade-up 0.55s ease both;
+  animation-delay: var(--delay, 0s);
+}
+
+.pipeline-card.pipeline-output {
+  animation: pipeline-fade-up 0.55s ease both;
+  animation-delay: calc(4s + var(--delay, 0s));
+}
+
+.pipeline-pulse {
+  animation: pipeline-pulse-scale 2.2s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+
+/* Decorative depth for the existing Sustain-X hero artwork. */
+.hero-3d-scene {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --glow-x: 50%;
+  --glow-y: 50%;
+  isolation: isolate;
+  max-width: 440px;
+  perspective: 1100px;
+  position: relative;
+  width: min(100%, 440px);
+}
+
+.hero-3d-card {
+  background: radial-gradient(ellipse at var(--glow-x) var(--glow-y), rgba(157, 235, 212, 0.52), rgba(248, 250, 247, 0.94) 58%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 1rem;
+  box-shadow: 0 24px 45px rgba(20, 35, 34, 0.14), 0 8px 18px rgba(83, 191, 165, 0.15), inset 0 1px rgba(255, 255, 255, 0.92);
+  overflow: hidden;
+  position: relative;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateZ(22px);
+  transform-style: preserve-3d;
+  transition: transform 220ms ease-out, background 220ms ease-out;
+  will-change: transform;
+  z-index: 2;
+}
+
+.hero-3d-art {
+  display: block;
+  mix-blend-mode: multiply;
+  transform: translateZ(34px) scale(1.035);
+  width: 100%;
+}
+
+.hero-3d-glow {
+  background: radial-gradient(circle, rgba(83, 191, 165, 0.36), rgba(83, 191, 165, 0) 68%);
+  filter: blur(16px);
+  inset: 9% 7% 3%;
+  opacity: 0.7;
+  position: absolute;
+  transform: translateZ(-30px) scale(1.08);
+  z-index: 0;
+}
+
+.hero-3d-orbit {
+  border: 1px solid rgba(83, 191, 165, 0.28);
+  border-radius: 50%;
+  pointer-events: none;
+  position: absolute;
+  transform-style: preserve-3d;
+  z-index: 1;
+}
+
+.hero-3d-orbit-one {
+  height: 70%;
+  right: -8%;
+  top: 14%;
+  transform: rotateX(67deg) rotateZ(-26deg) translateZ(-4px);
+  width: 70%;
+}
+
+.hero-3d-orbit-two {
+  bottom: 10%;
+  height: 53%;
+  left: -10%;
+  transform: rotateX(71deg) rotateZ(37deg) translateZ(-12px);
+  width: 53%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-3d-card,
+  .hero-3d-art,
+  .hero-3d-glow,
+  .hero-3d-orbit {
+    transform: none;
+    transition: none;
+  }
+}

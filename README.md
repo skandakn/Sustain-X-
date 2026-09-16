@@ -10,7 +10,7 @@
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript%205-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5" /></a>
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" /></a>
-  <a href="https://groq.com/"><img src="https://img.shields.io/badge/Groq_LPU_AI-F55036?style=for-the-badge&logo=fastapi&logoColor=white" alt="Groq AI" /></a>
+  <a href="https://ai.google.dev/gemini-api"><img src="https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google Gemini" /></a>
   <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase_DB-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" /></a>
   <a href="https://clerk.com/"><img src="https://img.shields.io/badge/Clerk_Auth-6C47FF?style=for-the-badge&logo=clerk&logoColor=white" alt="Clerk Auth" /></a>
 
@@ -104,7 +104,7 @@ Traditional learning management systems force every student into a monolithic, r
 - **Multilingual Translation**: Seamlessly translates study materials and explanations into Spanish, French, German, and more.
 
 ### 6. 👁️ Vision OCR & Multimodal Ingestion
-- **Document & Image Parsing**: Upload textbook photos, whiteboard sketches, or PDF slides for instant extraction via Qwen Vision / OCR.
+- **Document & Image Parsing**: Upload textbook photos, whiteboard sketches, or PDF slides for instant extraction via Gemini multimodal understanding / OCR.
 - **Clean Structure Re-formatting**: Converts noisy scans into clean, screen-reader friendly markdown with proper heading hierarchies.
 
 <p align="center">
@@ -145,8 +145,8 @@ flowchart LR
     end
 
     subgraph AI [AI Inference Cloud]
-        H[Groq LPU Cloud] --> I[Llama 3 / GPT-OSS 20B\nText Adaptation & Mind Maps]
-        H --> J[Qwen 3.6 Vision 27B\nDiagrams & OCR Analysis]
+        H[Google Gemini API] --> I[Gemini 2.5 Flash\nText Adaptation & Mind Maps]
+        H --> J[Gemini Multimodal\nDiagrams & OCR Analysis]
         K[Web Speech Synthesizer\nTTS Voice Engine]
     end
 
@@ -203,11 +203,8 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 NEXT_PUBLIC_SUSTAIN_X_DEMO_MODE=true
 
-# AI Provider & Inference Models (Groq Cloud)
-AI_PROVIDER=groq
-AI_MODEL=openai/gpt-oss-20b
-AI_VISION_MODEL=qwen/qwen3.6-27b
-GROQ_API_KEY=your_groq_api_key_here
+# Google Gemini API (keep this server-side)
+GEMINI_API_KEY=your_gemini_api_key_here
 
 # Clerk Authentication (Optional)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
@@ -215,7 +212,7 @@ CLERK_SECRET_KEY=your_clerk_secret_key
 ```
 
 > [!NOTE]
-> **Zero-Key Hackathon Demo Mode**: If `GROQ_API_KEY` or `SUPABASE` keys are not provided, Sustain-X gracefully falls back to built-in simulated data and local offline storage so you can test the full user journey seamlessly!
+> **Zero-Key Hackathon Demo Mode**: If `GEMINI_API_KEY` or `SUPABASE` keys are not provided, Sustain-X gracefully falls back to built-in simulated data and local offline storage so you can test the full user journey seamlessly!
 
 ### 3️⃣ Launch the Development Server
 

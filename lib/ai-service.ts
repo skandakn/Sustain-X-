@@ -1,4 +1,5 @@
-﻿import { featuredLesson, mindMapsByLanguage } from "@/lib/demo-data";
+import { featuredLesson, mindMapsByLanguage } from "@/lib/demo-data";
+import { generateGeminiImageText, generateGeminiText, geminiRuntime } from "@/lib/gemini";
 import type { AccessibilitySupport, ContentLanguage, MindMapNode } from "@/lib/types";
 
 type Level = "simple" | "very-simple" | "new";
@@ -11,124 +12,26 @@ const delay = (ms = 360) =>
     setTimeout(resolve, ms);
   });
 
-function getAiConfig() {
-  const openaiKey = process.env.OPENAI_API_KEY?.trim();
-  const groqKey = process.env.GROQ_API_KEY?.trim();
-  const apiKey = openaiKey || groqKey;
-  const isGroq = !openaiKey && Boolean(groqKey);
-  const provider = (process.env.AI_PROVIDER || (openaiKey ? "openai" : groqKey ? "groq" : "demo-mode")).toLowerCase();
-
-  const textModel = isGroq
-    ? (process.env.AI_MODEL || "llama-3.3-70b-versatile")
-    : (process.env.AI_MODEL && !process.env.AI_MODEL.includes("gpt-oss") ? process.env.AI_MODEL : "gpt-4o-mini");
-
-  const visionModel = isGroq
-    ? (process.env.AI_VISION_MODEL && !process.env.AI_VISION_MODEL.includes("qwen") ? process.env.AI_VISION_MODEL : "llama-3.2-11b-vision-preview")
-    : (process.env.AI_VISION_MODEL && !process.env.AI_VISION_MODEL.includes("gpt-4.1") && !process.env.AI_VISION_MODEL.includes("qwen")
-        ? process.env.AI_VISION_MODEL
-        : "gpt-4o-mini");
-
-  return {
-    apiKey,
-    provider,
-    isGroq,
-    endpoint: isGroq
-      ? "https://api.groq.com/openai/v1/chat/completions"
-      : "https://api.openai.com/v1/chat/completions",
-    textModel,
-    visionModel
-  };
-}
-
-function getOpenAiConfig() {
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
-  const textModel = process.env.AI_MODEL && !process.env.AI_MODEL.includes("gpt-oss")
-    ? process.env.AI_MODEL
-    : "gpt-4o-mini";
-
-  return {
-    apiKey,
-    endpoint: "https://api.openai.com/v1/chat/completions",
-    textModel
-  };
-}
-
 export const aiRuntime = {
   get provider() {
-    return getAiConfig().apiKey ? getAiConfig().provider : "demo-mode";
+    return geminiRuntime.configured ? "gemini" : "demo-mode";
   },
   get demoMode() {
-    return !getAiConfig().apiKey;
+    return !geminiRuntime.configured;
   }
 };
 
-function getResponseOutputText(data: unknown): string {
-  if (!data || typeof data !== "object") return "";
-
-  // Standard OpenAI / Groq chat completions format
-  if ("choices" in data && Array.isArray((data as { choices?: unknown }).choices)) {
-    const choices = (data as { choices: Array<{ message?: { content?: unknown } }> }).choices;
-    const content = choices[0]?.message?.content;
-    if (typeof content === "string") return content.trim();
-  }
-
-  // output_text format
-  if ("output_text" in data && typeof (data as { output_text?: unknown }).output_text === "string") {
-    return (data as { output_text: string }).output_text.trim();
-  }
-
-  // OpenAI Realtime / custom response output format
-  if ("output" in data && Array.isArray((data as { output?: unknown }).output)) {
-    return (data as { output: Array<{ content?: Array<{ text?: unknown; type?: unknown }> }> }).output
-      .flatMap((item) => item.content ?? [])
-      .map((item) => (typeof item.text === "string" ? item.text : ""))
-      .filter(Boolean)
-      .join("\n")
-      .trim();
-  }
-
-  return "";
-}
-
 async function callAI(instructions: string, input: string, fallback: string) {
-  const config = getAiConfig();
-  if (!config.apiKey) {
+  if (!geminiRuntime.configured) {
     await delay();
     return fallback;
   }
 
-  try {
-    const response = await fetch(config.endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: config.textModel,
-        messages: [
-          {
-            role: "system",
-            content: instructions
-          },
-          {
-            role: "user",
-            content: input
-          }
-        ],
-        temperature: 0.3
-      })
-    });
-
-    if (!response.ok) {
-      return fallback;
-    }
-
-    const data = await response.json();
-    return getResponseOutputText(data) || fallback;
-  } catch {
-    return fallback;
-  }
+  return (await generateGeminiText({
+    systemInstruction: instructions,
+    contents: input,
+    temperature: 0.3
+  })) ?? fallback;
 }
 
 function getLatestUserMessage(messages: SustainXChatMessage[]) {
@@ -138,83 +41,37 @@ function getLatestUserMessage(messages: SustainXChatMessage[]) {
 function getChatFallback(messages: SustainXChatMessage[]) {
   const question = getLatestUserMessage(messages);
   return question
-    ? "Ask ADAPTIVA needs the server-side AI connection to answer this directly. Please check your API key in .env.local."
-    : "Ask ADAPTIVA needs a question to answer.";
+    ? "Ask Sustain-X needs the server-side AI connection to answer this directly. Please check your API key in .env.local."
+    : "Ask Sustain-X needs a question to answer.";
 }
 
 export async function generateNotesFromTranscript(transcript: string) {
-  const config = getOpenAiConfig();
-  if (!config.apiKey) {
+  if (!geminiRuntime.configured) {
     return "";
   }
 
-  try {
-    const response = await fetch(config.endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: config.textModel,
-        messages: [
-          {
-            role: "system",
-            content:
-              "You generate clear, structured educational notes from a video transcript. Use only information supported by the transcript. Organize the notes with a title, key points, and a short summary."
-          },
-          {
-            role: "user",
-            content: `Create educational notes from this transcript:\n\n${transcript}`
-          }
-        ]
-      })
-    });
-
-    if (!response.ok) return "";
-
-    const data = await response.json();
-    return getResponseOutputText(data);
-  } catch {
-    return "";
-  }
+  return (await generateGeminiText({
+    systemInstruction:
+      "You generate clear, structured educational notes from a video transcript. Use only information supported by the transcript. Organize the notes with a title, key points, and a short summary.",
+    contents: `Create educational notes from this transcript:\n\n${transcript}`
+  })) ?? "";
 }
 
 export async function askSustainXChat(messages: SustainXChatMessage[], _context?: SustainXChatContext) {
   void _context;
-  const config = getOpenAiConfig();
-  if (!config.apiKey) {
+  if (!geminiRuntime.configured) {
     await delay();
     return getChatFallback(messages);
   }
 
-  try {
-    const response = await fetch(config.endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: config.textModel,
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are Ask ADAPTIVA, a general educational assistant for learners across subjects. When the learner asks a direct educational question, answer the question directly first. For example, if they ask what a concept is, explain that concept; if they ask for a simple explanation, explain it simply; if they ask for an example, include an example. Do not give meta-advice about how to study unless requested. Explain clearly, accurately, and accessibly."
-          },
-          ...messages
-        ]
-      })
-    });
-
-    if (!response.ok) return getChatFallback(messages);
-
-    const data = await response.json();
-    return getResponseOutputText(data) || getChatFallback(messages);
-  } catch {
-    return getChatFallback(messages);
-  }
+  return (await generateGeminiText({
+    systemInstruction:
+      "You are Ask Sustain-X, a general educational assistant for learners across subjects. When the learner asks a direct educational question, answer the question directly first. For example, if they ask what a concept is, explain that concept; if they ask for a simple explanation, explain it simply; if they ask for an example, include an example. Do not give meta-advice about how to study unless requested. Explain clearly, accurately, and accessibly.",
+    contents: messages.map((message) => ({
+      role: message.role === "assistant" ? ("model" as const) : ("user" as const),
+      parts: [{ text: message.content }]
+    }))
+  })) ?? getChatFallback(messages);
 }
 
 function describeImageFallback(action: ImageAdaptAction, filename: string, image: string) {
@@ -236,30 +93,14 @@ function describeImageFallback(action: ImageAdaptAction, filename: string, image
   return `${base}\n\nSimple explanation: this is the uploaded image selected for analysis.`;
 }
 
-async function getApiErrorMessage(response: Response, providerName: string) {
-  try {
-    const data = (await response.json()) as { error?: { code?: string; message?: string } };
-    if (data.error?.code === "insufficient_quota") {
-      return `${providerName} could not analyze this image because the API key has no available quota.`;
-    }
-    if (data.error?.code === "invalid_api_key") {
-      return `${providerName} could not analyze this image because the API key is invalid.`;
-    }
-    return data.error?.message ?? `${providerName} could not analyze this image right now.`;
-  } catch {
-    return `${providerName} could not analyze this image right now.`;
-  }
-}
-
 export async function analyzeUploadedImage(
   action: ImageAdaptAction,
   image: string,
   filename: string
 ): Promise<{ result: string; fallback: boolean }> {
-  const config = getAiConfig();
   const fallback = describeImageFallback(action, filename, image);
 
-  if (!config.apiKey) {
+  if (!geminiRuntime.configured) {
     await delay();
     return { result: fallback, fallback: true };
   }
@@ -275,55 +116,17 @@ export async function analyzeUploadedImage(
       "1. Transcribe and extract the readable text and core facts from the image.\n2. Break the information or process down into sequential, numbered learning steps (Step 1, Step 2, etc.)."
   };
 
-  try {
-    const response = await fetch(config.endpoint, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: config.visionModel,
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are ADAPTIVA, an accessibility-first educational AI that analyzes uploaded documents, study notes, images, and textbook scans. Help students with learning differences understand the material clearly.\n\nStructure your output with clear markdown headings:\n### 📄 Extracted Content\n(Transcribe or summarize all readable text, labels, equations, and diagrams found in the image)\n\n### 💡 " + action + "\n(Provide the tailored explanation based on the requested format)"
-          },
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: `${actionInstructions[action]}\n\nUploaded file: ${filename}`
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: image
-                }
-              }
-            ]
-          }
-        ],
-        max_tokens: 1200
-      })
-    });
+  const content = await generateGeminiImageText(
+    image,
+    `${actionInstructions[action]}\n\nUploaded file: ${filename}`,
+    "You are Sustain-X, an accessibility-first educational AI that analyzes uploaded documents, study notes, images, and textbook scans. Help students with learning differences understand the material clearly.\n\nStructure your output with clear markdown headings:\n### 📄 Extracted Content\n(Transcribe or summarize all readable text, labels, equations, and diagrams found in the image)\n\n### 💡 " +
+      action +
+      "\n(Provide the tailored explanation based on the requested format)"
+  );
 
-    if (!response.ok) {
-      const errorMsg = await getApiErrorMessage(response, config.isGroq ? "Groq" : "OpenAI");
-      return { result: `${errorMsg}\n\n${fallback}`, fallback: true };
-    }
-
-    const data = await response.json();
-    const content = getResponseOutputText(data);
-    if (content) {
-      return { result: content, fallback: false };
-    }
-    return { result: fallback, fallback: true };
-  } catch {
-    return { result: fallback, fallback: true };
-  }
+  return content
+    ? { result: content, fallback: false }
+    : { result: `Gemini could not analyze this image right now.\n\n${fallback}`, fallback: true };
 }
 
 export async function simplifyText(input: string, level: Level) {
@@ -377,8 +180,7 @@ export async function generateMindMap(
   language: ContentLanguage = "English"
 ): Promise<MindMapNode> {
   const fallback = mindMapsByLanguage[language] ?? featuredLesson.mindMap;
-  const config = getAiConfig();
-  if (!config.apiKey) {
+  if (!geminiRuntime.configured) {
     await delay();
     return fallback;
   }
@@ -511,7 +313,7 @@ export async function extractConcepts(input = featuredLesson.original) {
 
 export async function askTutor(input: string, question?: string) {
   return callAI(
-    "Answer as ADAPTIVA, an accessibility-first learning assistant. Use respectful, simple, context-aware explanations.",
+    "Answer as Sustain-X, an accessibility-first learning assistant. Use respectful, simple, context-aware explanations.",
     `Content:\n${input}\n\nQuestion:\n${question ?? "Explain this differently."}`,
     "Think of DNA as a recipe book. Before a cell divides, it needs a second copy. DNA opens, each half guides a matching new half, and the cell ends with two complete copies."
   );

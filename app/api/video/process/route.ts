@@ -1,3 +1,4 @@
+import { getGeminiApiKey, transcribeVideoWithGemini } from "@/lib/gemini";
 import { requireApiUser } from "@/lib/api/auth";
 import { fail, handleApiError, ok } from "@/lib/api/http";
 
@@ -10,30 +11,16 @@ export async function POST(request: Request) {
       return fail("Video file is required.", 400, "video_file_required");
     }
 
-    const groqApiKey = process.env.GROQ_API_KEY;
-    if (!groqApiKey) {
-      return fail("Groq API key is not configured.", 500, "groq_api_key_missing");
+    const auth = await requireApiUser();
+    if (auth.response) return auth.response;
+
+    if (!getGeminiApiKey()) {
+      return fail("Gemini API key is not configured.", 503, "gemini_api_key_missing");
     }
 
-    const auth = await requireApiUser();
-
-    const transcriptionFormData = new FormData();
-    transcriptionFormData.append("file", uploadedVideo, uploadedVideo.name);
-    transcriptionFormData.append("model", "whisper-large-v3-turbo");
-    transcriptionFormData.append("response_format", "verbose_json");
-    transcriptionFormData.append("timestamp_granularities[]", "segment");
-
-    const transcriptionResponse = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${groqApiKey}`
-      },
-      body: transcriptionFormData
-    });
-    const transcription = await transcriptionResponse.json();
-
-    if (!transcriptionResponse.ok) {
-      return fail("Video transcription failed.", transcriptionResponse.status, "groq_transcription_failed");
+    const transcription = await transcribeVideoWithGemini(uploadedVideo);
+    if (!transcription) {
+      return fail("Gemini could not transcribe this video. Try a shorter video or a supported video format.", 503, "gemini_transcription_failed");
     }
 
     return ok(

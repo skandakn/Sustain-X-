@@ -35,3 +35,5 @@ pnpm-debug.log*
 qa-*.png
 *-inspect.json
 screenshot-result.json
+.vercel
+.env*

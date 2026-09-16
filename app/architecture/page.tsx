@@ -14,8 +14,8 @@ const privacy = [
 const implementationStatus = [
   "Clerk authentication: implemented for sign-in, sign-up, route protection, and account controls.",
   "Database persistence: Supabase-ready API routes and RLS migration remain available.",
-  "AI provider: configurable server-side OpenAI Responses API with demo fallback.",
-  "Video transcription: production-ready route shape; demo transcript fallback until a transcription service is configured.",
+  "AI provider: centralized server-side Google Gemini API with deterministic demo fallback.",
+  "Video transcription: Gemini multimodal transcription with timestamped segments and graceful fallback errors.",
   "Clerk-backed demo persistence: active when Clerk is configured without Supabase."
 ];
 

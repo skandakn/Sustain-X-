@@ -46,11 +46,11 @@ The repository contains several real prompt templates inside the AI service laye
 | Adaptive learning workspace | Adapts a lesson into Original, Simplified, Focus, Audio, and Visual modes. | Gives learners multiple ways to reach the same concept. | Implemented |
 | Reading Mode | Controls font, text size, spacing, focus guide, audio speed, and read-aloud behavior. | Supports readable layout, reduced strain, and sentence highlighting. | Implemented |
 | OpenDyslexic and spacing preferences | Applies user preferences from `/api/profile` and local storage. | Makes reading more comfortable and personalized. | Implemented |
-| Translation support | Translates visible UI text and lesson content for English, Hindi, Kannada, Urdu, and Tamil. | Reduces language barriers and supports RTL Urdu layout. | Implemented with OpenAI/deterministic fallback |
-| OCR and image adaptation | Accepts uploaded images or scanned documents and explains them. | Supports text extraction from scans and image-based learning. | Implemented with OpenAI vision or local OCR fallback |
+| Translation support | Translates visible UI text and lesson content for English, Hindi, Kannada, Urdu, and Tamil. | Reduces language barriers and supports RTL Urdu layout. | Implemented with Gemini/deterministic fallback |
+| OCR and image adaptation | Accepts uploaded images or scanned documents and explains them. | Supports text extraction from scans and image-based learning. | Implemented with Gemini multimodal understanding or local OCR fallback |
 | Live lecture mode | Uses browser speech recognition or demo speech fallback to capture a live transcript and save lecture notes. | Helps learners review spoken content and keep accessible notes. | Implemented |
-| Recorded video mode | Uploads video and sends it to Groq Whisper for timestamped transcription. | Converts video speech into readable segments. | Implemented; summary text in the UI is fallback/demo content |
-| Ask Sustain-X | Provides an AI learning assistant through `/api/chat`. | Lets learners ask for examples, summaries, steps, and simpler explanations. | Implemented with Groq fallback behavior |
+| Recorded video mode | Uploads video and sends it to Gemini multimodal transcription for timestamped segments. | Converts video speech into readable segments. | Implemented; summary text in the UI is fallback/demo content |
+| Ask Sustain-X | Provides an AI learning assistant through `/api/chat`. | Lets learners ask for examples, summaries, steps, and simpler explanations. | Implemented with Gemini fallback behavior |
 | Tutor page | Shows a demo conversation for the sample lesson. | Demonstrates adaptive Q&A without claiming live AI on that page. | Demo-only UI |
 | Text-to-Figure | Converts educational text into a structured visual explanation with SVG/table rendering. | Adds another way to understand complex concepts. | Implemented with AI and deterministic fallback |
 | Progress tracking | Stores sessions, progress, notes, and charts. | Lets learners see activity without turning learning into noisy gamification. | Implemented with Supabase or demo store |
@@ -93,8 +93,7 @@ Sustain-X uses AI to reshape the same educational source in different formats:
 - transcript-based notes
 
 The implementation is mixed by design:
-- Groq powers the main educational chat and transcript-note generation when `GROQ_API_KEY` is set.
-- OpenAI powers image understanding, UI translation, and figure generation when `OPENAI_API_KEY` and the configured provider allow it.
+- Gemini powers educational chat, transcript notes, image understanding, UI translation, figure generation, and recorded-video transcription when `GEMINI_API_KEY` is set.
 - Deterministic demo fallbacks keep the experience usable when keys are absent.
 
 ## 10. System Architecture
@@ -113,18 +112,18 @@ Learner
 | --- | --- |
 | Frontend | Next.js App Router pages and React components for learn, live, video, dashboard, progress, settings, tutor, teacher, architecture, and onboarding. |
 | API/backend | Route handlers for adapt, chat, figure, image-adapt, translate, live-notes, video/process, materials, notes, progress, profile, and dashboard. |
-| AI layer | Groq Responses API for core language tasks, OpenAI Responses API for image and figure tasks, fallback logic for demo mode. |
+| AI layer | Centralized Google Gemini API client for text, JSON, image, and video tasks, with deterministic fallback logic for demo mode. |
 | Processing layer | Browser speech recognition, speech synthesis, local OCR fallback, video upload handling, text parsing, and figure rendering. |
 | Accessibility layer | Reading Mode, translation, focus guide, simplified reading, concept maps, and visual explanations. |
 | Auth layer | Clerk sign-in/sign-up plus route protection; Supabase auth when configured. |
 | Database layer | Supabase/PostgreSQL tables with row-level security policies. |
-| External services | Groq, OpenAI, Clerk, Supabase, browser speech APIs, and Tesseract.js CDN fallback for OCR. |
+| External services | Google Gemini, Clerk, Supabase, browser speech APIs, and Tesseract.js CDN fallback for OCR. |
 
 ## 11. Key Data Flows
 - Text -> /api/adapt -> AI prompt -> simplified, summarized, stepped, translated, or mapped content.
-- Image -> /api/image-adapt -> OpenAI vision or local OCR fallback -> accessible explanation.
+- Image -> /api/image-adapt -> Gemini multimodal understanding or local OCR fallback -> accessible explanation.
 - Live speech -> browser SpeechRecognition -> transcript -> /api/live-notes -> saved notes and optional material.
-- Video -> /api/video/process -> Groq transcription -> timestamped transcript.
+- Video -> /api/video/process -> Gemini multimodal transcription -> timestamped transcript.
 - Learning text -> /api/figure -> figure spec -> deterministic SVG/table figure renderer.
 - UI text -> /api/translate -> DOM scan and cached translations -> translated interface.
 
@@ -135,7 +134,7 @@ Ask Sustain-X is the learner-facing assistant attached to the app shell. It supp
 The Text-to-Figure page converts educational text into structured visuals. The service picks a figure type, extracts concepts, builds a JSON figure specification, and renders it as a process diagram, cycle, concept map, comparison table, flowchart, timeline, system diagram, or infographic. When the AI provider is unavailable, the app falls back to demo figures or a deterministic sentence-based builder. This makes the feature useful in both live and showcase modes, while keeping the visual explanation grounded in the source text.
 
 ## 14. Security, Privacy & Responsible AI
-- Secrets stay server-side in environment variables such as `GROQ_API_KEY`, `OPENAI_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, and `CLERK_SECRET_KEY`.
+- Secrets stay server-side in environment variables such as `GEMINI_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, and `CLERK_SECRET_KEY`.
 - Clerk protects sign-in, sign-up, and protected routes when configured.
 - Supabase migration files enable row-level security so each authenticated user accesses only their own rows.
 - Saved notes, materials, progress, and profile data are scoped to the authenticated user.
@@ -149,7 +148,7 @@ The Text-to-Figure page converts educational text into structured visuals. The s
 | Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS |
 | UI | Lucide React icons, custom panels/buttons, accessible React components |
 | State and helpers | React hooks, Zod validation, utility helpers |
-| AI / transcription | Groq Responses API, Groq Whisper transcription, OpenAI Responses API |
+| AI / transcription | Google Gemini API for text, image, JSON, and video transcription |
 | OCR / speech | Browser SpeechRecognition, SpeechSynthesis, Tesseract.js CDN fallback |
 | Authentication | Clerk |
 | Database | Supabase / PostgreSQL with RLS |
